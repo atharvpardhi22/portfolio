@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>My Portfolio with Day/Night Theme</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: "Helvetica Neue", Arial, sans-serif; }
+
+    body {
+      min-height: 100vh;
+      line-height: 1.6;
+      overflow-x: hidden;
+      transition: background 1s ease, color 0.6s ease;
+    }
+
+    /* NIGHT THEME */
+    body.night {
+      background: linear-gradient(180deg, #0b0f29 0%, #3a0ca3 100%);
+      color: #fefeff;
+    }
+
+    /* DAY THEME */
+    body.day {
+      background: linear-gradient(180deg, #6ec9ff 0%, #b3e5ff 100%);
+      color: #213a73;
+    }
+
+    section { padding: 4rem 1.5rem; display: flex; justify-content: center; }
+
+    .glass-card {
+      width: 100%; max-width: 900px;
+      border-radius: 20px; padding: 2rem;
+      backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
+      border: 1px solid rgba(255,255,255,0.25);
+      box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+      transition: background 0.6s, color 0.6s;
+    }
+    body.night .glass-card { background: rgba(255,255,255,0.08); color:#fff; }
+    body.day .glass-card { background: rgba(255,255,255,0.35); color:#213a73; }
+
+    header h1 { text-align:center; font-size:clamp(2rem,6vw,3rem); margin-bottom:0.5rem; }
+    header h2 { text-align:center; font-weight:400; margin-bottom:1.5rem; font-size:clamp(1rem,3vw,1.3rem); }
+
+    h3 { text-align:center; margin-bottom:1rem; font-size:clamp(1.3rem,4vw,1.6rem); }
+
+    .projects-grid {
+      display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:1.5rem; margin-top:1.5rem;
+    }
+    .project-card { border-radius:12px; padding:1rem; transition:transform 0.3s, background 0.3s; }
+    body.night .project-card { background:rgba(255,255,255,0.12); color:#fff; }
+    body.night .project-card:hover {transform:translateY(-5px);background:rgba(255,255,255,0.22);}
+    body.day .project-card { background:rgba(255,255,255,0.55); color:#213a73; }
+    body.day .project-card:hover {transform:translateY(-5px);background:rgba(255,255,255,0.75);}
+
+    .contact .links { margin-top:1rem; display:flex;flex-wrap:wrap;justify-content:center;gap:1rem; }
+    .contact .links a {
+      text-decoration:none;font-weight:bold;padding:0.6rem 1.2rem;border-radius:8px;transition:background 0.3s,color 0.3s;
+    }
+    body.night .contact .links a { color:#fff; background:rgba(255,255,255,0.2); }
+    body.night .contact .links a:hover { background:rgba(255,255,255,0.3); color:#dcb8ff; }
+    body.day .contact .links a { color:#213a73; background:rgba(255,255,255,0.55); }
+    body.day .contact .links a:hover { background:rgba(255,255,255,0.75); color:#004c91; }
+
+    footer { text-align:center; padding:2rem 1rem; font-size:0.8rem; opacity:0.75; }
+
+    /* Theme Switch Button */
+    .theme-toggle {
+      position:fixed;top:1rem;right:1rem;z-index:1000;
+      background:rgba(255,255,255,0.3);
+      border:none;border-radius:50px;padding:0.6rem 1.2rem;
+      cursor:pointer;font-size:0.9rem;font-weight:bold;
+      backdrop-filter:blur(10px);
+      transition: background 0.3s;
+    }
+    .theme-toggle:hover { background:rgba(255,255,255,0.55); }
+
+    /* Stars: only night */
+    .stars {position:fixed;top:0;left:0;width:100%;height:100%;z-index:-2;overflow:hidden;display:none;}
+    body.night .stars {display:block;}
+    .star {
+      position:absolute;width:2px;height:2px;background:white;border-radius:50%;
+      animation:twinkle 3s infinite ease-in-out;
+    }
+    @keyframes twinkle {0%,100%{opacity:0.2;transform:scale(1);}50%{opacity:1;transform:scale(1.4);} }
+
+    /* Clouds: only day */
+    .clouds {position:fixed;top:0;left:0;width:100%;height:100%;z-index:-2;overflow:hidden;display:none;}
+    body.day .clouds {display:block;}
+    .cloud {
+      position:absolute;width:200px;height:80px;background:white;border-radius:100px;
+      opacity:0.8;filter:blur(2px);
+      animation: drift 60s linear infinite;
+    }
+    .cloud::before,.cloud::after{
+      content:"";position:absolute;background:white;width:100px;height:100px;border-radius:50%;
+    }
+    .cloud::before{top:-30px;left:20px;}
+    .cloud::after{top:-20px;right:20px;}
+    @keyframes drift { from{transform:translateX(-250px);} to{transform:translateX(110%);} }
+
+    @media (max-width:600px){ section{padding:3rem 1rem;} .glass-card{padding:1.5rem;} }
+  </style>
+</head>
+<body class="night">
+
+  <!-- Theme Button -->
+  <button class="theme-toggle" id="theme-btn">🌞/🌙</button>
+
+  <!-- Stars and Clouds Layer -->
+  <div class="stars" id="star-container"></div>
+  <div class="clouds" id="cloud-container"></div>
+
+  <!-- Hero -->
+  <section>
+    <div class="glass-card">
+      <header>
+        <h1>Atharv Pardhi</h1>
+        <h2>Web Developer • Designer • Dreamer • Gamer • Editor</h2>
+      </header>
+    </div>
+  </section>
+
+  <!-- About -->
+  <section>
+    <div class="glass-card">
+      <h3>About Me</h3>
+      <p>
+        By night 🌌, I code under starlight. By day 🌤, I build with blue skies and drifting clouds as inspiration.
+      </p>
+    </div>
+  </section>
+
+  <!-- Projects -->
+  <section>
+    <div class="glass-card">
+      <h3>Projects</h3>
+      <div class="projects-grid">
+        <div class="project-card"><h4>📱 Project One</h4><p>One Day</p></div>
+        <div class="project-card"><h4>💻 Project Two</h4><p>One Day</p></div>
+        <div class="project-card"><h4>🌐 Project Three</h4><p>One Day</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Contact -->
+  <section class="contact">
+    <div class="glass-card">
+      <h3>Contact Me</h3>
+      <div class="links">
+        <a href="mailto:pardhiatharv22@gmail.com">Email</a>
+        <a href="https://github.com/atharvpardhi22" target="_blank">GitHub</a>
+        <a href="https://www.linkedin.com/in/atharv-pardhi-302b91282?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=an" target="_blank">LinkedIn</a>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    © 2024 Your Name. All Rights Reserved.
+  </footer>
+
+  <script>
+    // Toggle theme
+    const btn = document.getElementById("theme-btn");
+    btn.addEventListener("click", () => {
+      document.body.classList.toggle("night");
+      document.body.classList.toggle("day");
+    });
+
+    // Generate stars
+    const starContainer = document.getElementById("star-container");
+    for (let i = 0; i < 80; i++) {
+      const star = document.createElement("div");
+      star.className = "star";
+      star.style.top = Math.random() * 100 + "%";
+      star.style.left = Math.random() * 100 + "%";
+      star.style.animationDuration = 2 + Math.random() * 3 + "s";
+      star.style.opacity = Math.random();
+      starContainer.appendChild(star);
+    }
+
+    // Generate clouds
+    const cloudContainer = document.getElementById("cloud-container");
+    for (let i = 0; i < 6; i++) {
+      const cloud = document.createElement("div");
+      cloud.className = "cloud";
+      cloud.style.top = (Math.random() * 80) + "%";
+      cloud.style.left = (-200 + Math.random() * 400) + "px";
+      cloud.style.animationDuration = (40 + Math.random() * 40) + "s";
+      cloudContainer.appendChild(cloud);
+    }
+  </script>
+</body>
+</html>
